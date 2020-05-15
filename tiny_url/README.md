@@ -56,3 +56,28 @@ A cache can be used for hot links. Assume 80/20 rule for hot links. What **memor
   * -> return: null
 
 ## Database Design
+| Link |
+|---|
+| pk: hash: varchar(16) |
+| url: varchar(512) |
+| alias: varchar(16) |
+| expireAt: datetime |
+| userID: int |
+
+| User |
+|---|
+| pk: userID: int |
+| name: varchar(32) |
+| email: varchar(32) |
+
+SQL or NoSQL? The structure of the data may change, and the size of the data is growing. NoSQL will be a better choice.
+
+## System Design
+Online hash generation can be tricky, let's use an offline key generating service. When a key is used, remove the key from the KGS. When the key is released, add the key back to the KGS.
+
+![System Design](./assets/tiny-url.png)
+
+## Detailed System Design
+![System Design Detail](./assets/tiny-url-detail.png)
+
+Assume the load balancer uses weighted round robin scheme. Assume cache uses LRU eviction policy. There should be a cleanup service which purges link database of old links, and the service can run in offpeak hours. Purging is better than lazy cleanup so links don't live forever. An analytics service can also track redirects.
