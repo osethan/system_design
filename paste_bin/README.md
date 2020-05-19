@@ -79,3 +79,17 @@ A cache could be used for hot pastes. Assume an 80/20 rule for hot pasts. What's
 | email: varchar(32) |
 
 A Paste's text can be stored in object storage which let's the database scale better. The database is expected to grow which suggests using a NoSQL database.
+
+## (6) System Design
+Paste text could be uniquely hashed then encoded for a hash, but paste text may not be unique. Users could be asked to create accounts and login to create a create a hash including their userID, but doing so is too much a hassle. Using an incrementing int could overflow.
+
+Creating hashes online is difficult, so create hashes offline using a key generating service (KGS). When a paste is deleted the key can be returned to the KGS; use base36 [a-z, 0-9] encoding with 6 char hash key.
+
+![Pastebin](./assets/pastebin.png)
+
+## (7) System Design Detail
+Use weights round robin scheme for load balancers, LRU eviction policy for caches. Analytics can track popular pastes and locations. Private pastes for users could be made with a column for a paste url and rows for allowed visitors. A cleanup service can be used for puring expired pastes during low traffic, and can be preffered over lazy cleanup so no paste stays too long.
+
+KGS is a single point of failure, use replica standby to fix the single point of failure. A paste service instance can hold a cache of KGS keys. If the cache dies those keys will be lost. There are many more keys than needed so losing some can be ok.
+
+![Pastebin Detail](./assets/pastebin-detail.png)
