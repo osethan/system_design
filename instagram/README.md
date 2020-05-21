@@ -49,3 +49,24 @@ A cache can be used for popular users who have their photos seen by many. Assume
 | write bandwidth | 360 GB/s |
 | storage | 584 TB/year |
 | memory | 120 GB |
+
+## (4) API Design
+- createPost(apiKey, photo, username)
+  - apiKey: Backend service authorization
+  - photo: Post photo
+  - Username: User posting photo
+- readPost(apiKey, photoKey)
+  - ""
+  - photoKey: Object storage photo id
+- deletePost(apiKey, photoKey)
+  - ""
+  - ""
+- sendMsg(apiKey, sender, receiver, text)
+  - ""
+  - sender: User to send msg
+  - receiver: User to receive msg
+  - text: Msg text
+- readMsgs(apiKey, reader, sender)
+  - ""
+  - reader: User to read msgs
+  - sender: User with traded msgs
