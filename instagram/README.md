@@ -70,3 +70,25 @@ A cache can be used for popular users who have their photos seen by many. Assume
   - ""
   - reader: User to read msgs
   - sender: User with traded msgs
+
+## (5) Database Design
+- Post
+  - pk: postID: int
+  - photoID: varchar(512)
+  - userID: varchar(32)
+  - likesID: varchar(512)
+  - createdAt: datetime
+- User
+  - pk: hash: varchar(32)
+  - username: varchar(32)
+  - email: varchar(32)
+- Like
+  - Column of userIDs who've like related post
+- Msg
+  - pk: msgID: int
+  - hash(sender, receiver): varchar(32)
+  - senderID: varchar(32)
+  - receiverID: varchar(32)
+  - text: varchar(512)
+
+THe user, post, and msg data is structured and unrelated to similar fields. These are reasons the user, post, and msg data can be stored in a SQL database. The photos in the post store and text in the msg store can be saved as media in object storage with ids in the SQL data. The likes data can grow large, be analyzed, and is listed. The likes store can be in a NoSQL columnar database with id in the post SQL store.
